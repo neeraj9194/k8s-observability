@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: django-app-svc
+  annotations:
+    prometheus.io/scrape: "true"
+  labels:
+    app: django-app
+    tier: api
+spec:
+  type: NodePort
+  ports:
+    # the port that this service should serve on
+  - port: 8000
+  selector:
+    app: django-app
+    tier: api
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: django-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+        app: django-app
+        tier: api
+  template:
+    metadata:
+      labels:
+        app: django-app
+        tier: api
+      annotations:
+        prometheus.io/scrape: "true"
+    spec:
+      containers:
+      - name: django-app
+        image: django-app:latest
+        imagePullPolicy: Never
+        env:
+          - name: WEB_ENV
+            value: dev
+          - name: DB_NAME
+            value: blog_db
+          - name: DB_USER
+            value: neeraj
+          - name: DB_PASS
+            value: neeraj
+          - name: DB_HOST
+            value: mysql
+          - name: DB_PORT
+            value: "3306"
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 8000

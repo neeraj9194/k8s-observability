@@ -1,0 +1,12 @@
+apiVersion: kind.x-k8s.io/v1alpha4
+kind: Cluster
+nodes:
+- role: control-plane
+  # extraMounts:
+  #   - hostPath: /home/neeraj/k8s-volume
+  #     containerPath: /k8s-volume
+  extraMounts:
+    - hostPath: "./data-volume"
+      containerPath: "/data-volume"
+    - hostPath: "./mysql-volume"
+      containerPath: "/mysql-volume"

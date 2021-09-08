@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+spec:
+  ports:
+  - port: 3306
+  selector:
+    app: mysql
+  clusterIP: None
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
+        fsGroup: 0
+      containers:
+      - image: mysql:5.6
+        name: mysql
+        env:
+        - name: MYSQL_DATABASE
+          value: "blog_db"
+        - name: MYSQL_USER
+          value: "neeraj"
+        - name: MYSQL_PASSWORD
+          value: "neeraj"
+        - name: MYSQL_ROOT_PASSWORD
+          value: "rootpw"
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql        
+      # initContainers:
+      #   - name: mysql-data-permission-fix
+      #     image: busybox
+      #     command: ["/bin/chmod","-R","777", "/var/lib/mysql"]
+      #     volumeMounts:
+      #     - name: mysql-persistent-storage
+      #       mountPath: /var/lib/mysql
+      volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: mysql-pvc
+          

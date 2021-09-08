@@ -1,0 +1,50 @@
+version: "3.2"
+services:
+  mysql:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: "blog_db"
+      MYSQL_USER: "neeraj"
+      MYSQL_PASSWORD: "neeraj"
+      MYSQL_ROOT_PASSWORD: "rootpw"
+    volumes:
+      - ../docker-data/mysql:/var/lib/mysql
+    ports:
+      - 3306:3306
+  migration:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: "python3 manage.py migrate --noinput"
+    environment:
+      - WEB_ENV=dev
+      - DB_NAME=blog_db
+      - DB_USER=neeraj
+      - DB_PASS=neeraj
+      - DB_HOST=mysql
+      - DB_PORT=3306
+    working_dir: /app
+    volumes:
+      - .:/app
+    depends_on: 
+      - mysql
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: "python3 manage.py runserver 0.0.0.0:8000"
+    ports:
+      - 8000:8000
+    environment:
+      - WEB_ENV=dev
+      - DB_NAME=blog_db
+      - DB_USER=neeraj
+      - DB_PASS=neeraj
+      - DB_HOST=mysql
+      - DB_PORT=3306
+    working_dir: /app
+    volumes:
+      - .:/app
+    depends_on: 
+      - mysql

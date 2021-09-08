@@ -1,0 +1,88 @@
+openapi: "3.0.2"
+info:
+  version: 1.0.0
+  title: Neeraj's Blog
+servers:
+  - url: http://localhost:8000/api/
+paths:
+  /api/articles:
+    get:
+      summary: Pagnated list of all the articles 
+      operationId: list-article
+      tags:
+        - article
+      responses:
+        '200':
+          description: List of articles
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/ArticleSummary"
+    post:
+      summary: Create an article
+      operationId: post-article
+      tags:
+        - article
+      responses:
+        '201':
+          description: No response
+        '400':
+          description: Bad request
+  /api/article/{id}:
+    get:
+      summary: Retrieve an articles 
+      operationId: get-article
+      tags:
+        - article
+      responses:
+        '200':
+          description: Retrieve a single articles
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Article"
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+    ArticleCommon:
+      type: object
+      required:
+        - id
+        - title
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        author:
+          $ref: '#/components/schemas/User'
+        published:
+          type: boolean
+        read_time:
+          type: integer
+        updated_ts:
+          type: string
+          format: date-time
+        created_ts:
+          type: string
+          format: date-time
+    ArticleSummary:
+      allOf:
+        - $ref: '#/components/schemas/ArticleCommon'
+        - type: object
+          properties:
+            content_summary:
+              type: string      
+    Article:
+      allOf:
+        - $ref: '#/components/schemas/ArticleCommon'
+        - type: object
+          properties:
+            content:
+              type: string
