@@ -31,7 +31,7 @@ spec:
         runAsGroup: 0
         fsGroup: 0
       containers:
-      - image: mysql:5.6
+      - image: mysql:latest
         name: mysql
         env:
         - name: MYSQL_DATABASE
@@ -48,13 +48,6 @@ spec:
         volumeMounts:
         - name: mysql-persistent-storage
           mountPath: /var/lib/mysql        
-      # initContainers:
-      #   - name: mysql-data-permission-fix
-      #     image: busybox
-      #     command: ["/bin/chmod","-R","777", "/var/lib/mysql"]
-      #     volumeMounts:
-      #     - name: mysql-persistent-storage
-      #       mountPath: /var/lib/mysql
       volumes:
       - name: mysql-persistent-storage
         persistentVolumeClaim:

@@ -1,7 +1,7 @@
 from rest_framework import permissions
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import ModelViewSet
-
+from prometheus_client import Counter
 from .models import Article
 from .serializers import ArticleSummarySerializer, ArticleSerializer
 
@@ -12,6 +12,10 @@ class ArticlePagination(PageNumberPagination):
     max_page_size = 1000
 
 
+c = Counter('article_list_call',
+            'Number get(list) request article api received')
+
+
 class ArticleApi(ModelViewSet):
     queryset = Article.objects.all()
     permission_classes = [permissions.IsAuthenticated]
@@ -20,3 +24,7 @@ class ArticleApi(ModelViewSet):
         if self.action == 'list':
             return ArticleSummarySerializer
         return ArticleSerializer
+
+    def list(self, request, *args, **kwargs):
+        c.inc()
+        return super(ArticleApi, self).list(self, request, *args, **kwargs)

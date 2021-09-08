@@ -29,5 +29,6 @@ urlpatterns = [
     path('', RedirectView.as_view(url='api/', permanent=False)),
     path('api/', include(router.urls)),
     path('admin/', admin.site.urls),
+    path('', include('django_prometheus.urls')),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]

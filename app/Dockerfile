@@ -6,7 +6,6 @@ RUN apt-get update \
   && apt-get install -y python3-dev default-libmysqlclient-dev build-essential pipenv \
   && pip3 install --upgrade pip
 
-
 WORKDIR /app
 COPY Pipfile .
 COPY Pipfile.lock .

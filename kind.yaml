@@ -6,7 +6,8 @@ nodes:
   #   - hostPath: /home/neeraj/k8s-volume
   #     containerPath: /k8s-volume
   extraMounts:
-    - hostPath: "./data-volume"
-      containerPath: "/data-volume"
-    - hostPath: "./mysql-volume"
-      containerPath: "/mysql-volume"
+    - hostPath: "./prometheus-data"
+      containerPath: "/prometheus-data"
+    - hostPath: "./mysql-data"
+      containerPath: "/mysql-data"
+  

@@ -1,0 +1,6 @@
+.idea/
+*.pyc
+mysql-data
+prometheus-data
+app/db.sqlite3
+app/debug.log

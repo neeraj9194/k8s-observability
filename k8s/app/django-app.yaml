@@ -10,8 +10,9 @@ metadata:
 spec:
   type: NodePort
   ports:
-    # the port that this service should serve on
-  - port: 8000
+    - port: 8001
+      targetPort: 8000 
+      nodePort: 30001
   selector:
     app: django-app
     tier: api
@@ -23,7 +24,7 @@ kind: Deployment
 metadata:
   name: django-app
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
         app: django-app
@@ -38,7 +39,7 @@ spec:
     spec:
       containers:
       - name: django-app
-        image: django-app:latest
+        image: django-app:1.1
         imagePullPolicy: Never
         env:
           - name: WEB_ENV

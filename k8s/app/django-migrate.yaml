@@ -1,0 +1,30 @@
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: django-migrate
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: django-app
+        image: django-app:1.1
+        imagePullPolicy: Never
+        command: ['python3', 'manage.py', "migrate", "--noinput"]
+        env:
+          - name: WEB_ENV
+            value: dev
+          - name: DB_NAME
+            value: blog_db
+          - name: DB_USER
+            value: neeraj
+          - name: DB_PASS
+            value: neeraj
+          - name: DB_HOST
+            value: mysql
+          - name: DB_PORT
+            value: "3306"
+  backoffLimit: 4
+
+

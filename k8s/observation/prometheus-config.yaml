@@ -56,7 +56,10 @@ data:
       - job_name: 'kube-state-metrics'
         static_configs:
         - targets: ['kube-state-metrics:8081']
-
+      
+      - job_name: 'django-metrics'
+        static_configs:
+        - targets: ['django-app-svc.default:8001']
 
       - job_name: "kubernetes-cadvisor"
         scrape_interval: 15s
