@@ -39,7 +39,7 @@ spec:
     spec:
       containers:
       - name: django-app
-        image: django-app:1.1
+        image: django-app:1.2
         imagePullPolicy: Never
         env:
           - name: WEB_ENV
