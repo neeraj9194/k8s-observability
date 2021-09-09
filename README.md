@@ -56,5 +56,69 @@ spec:
 ```
 
 
+## Kubernetes service discovery
+
+Using kubernetes service discovery(kubernetes_sd_configs) you can scrape services, nodes, pods for data without configuring everytime there is new service/node etc.
 
 
+### To configure for discovering services
+
+The config is done only once to discover service [endpoints](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#endpoints) from where it can fetch data, provided we have configured services with prometheus annotation so that it know which port and endpoint to call.
+
+
+The job prometheus config looks like this,
+
+```
+  - job_name: 'kubernetes-service-endpoints'
+    kubernetes_sd_configs:
+    - role: endpoints
+    relabel_configs:
+      # these are the annotation you will be configuring on your services
+    - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
+      action: keep
+      regex: true
+    - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scheme]
+      action: replace
+      target_label: __scheme__
+      regex: (https?)
+    - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_path]
+      action: replace
+      target_label: __metrics_path__
+      regex: (.+)
+    - source_labels: [__address__, __meta_kubernetes_service_annotation_prometheus_io_port]
+      action: replace
+      target_label: __address__
+      regex: ([^:]+)(?::\d+)?;(\d+)
+      replacement: $1:$2
+    - action: labelmap
+      regex: __meta_kubernetes_service_label_(.+)
+    - source_labels: [__meta_kubernetes_namespace]
+      action: replace
+      target_label: kubernetes_namespace
+    - source_labels: [__meta_kubernetes_service_name]
+      action: replace
+      target_label: kubernetes_name
+```
+
+And the service config we can do like this, that way we can add as many services as we like and it will be detected automatically. 
+
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: django-app-svc
+  annotations:
+    prometheus.io/port: "8000"
+    prometheus.io/scrape: "true"
+```
+
+There are other roles in kubernetes_sd_configs thta can be used for collecting from diffrent types of components.
+
+Other types of metric collection techniques in kubernetes
+
+- kubernetes-apiservers: It gets all the metrics from the API servers.
+- nodes: It collects all the kubernetes node metrics.
+- pods: All the pod metrics get discovered if the pod metadata is annotated with prometheus.io/scrape and prometheus.io/port annotations.
+- kubernetes-cadvisor: Collects all cAdvisor metrics.
+- endpoints: All the Service endpoints are scrapped if the service metadata is annotated with prometheus.io/scrape and prometheus.io/port annotations.
+- service The service role discovers a target for each service port for each service. This is generally useful for blackbox monitoring of a service. The address will be set to the Kubernetes DNS name of the service and respective service port.
