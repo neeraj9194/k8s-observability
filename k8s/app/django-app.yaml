@@ -3,6 +3,7 @@ kind: Service
 metadata:
   name: django-app-svc
   annotations:
+    prometheus.io/port: "8000"
     prometheus.io/scrape: "true"
   labels:
     app: django-app
@@ -39,7 +40,7 @@ spec:
     spec:
       containers:
       - name: django-app
-        image: django-app:1.2
+        image: django-app:1.3
         imagePullPolicy: Never
         env:
           - name: WEB_ENV
@@ -54,6 +55,10 @@ spec:
             value: mysql
           - name: DB_PORT
             value: "3306"
+          - name: MY_POD_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
         resources:
           requests:
             cpu: 100m

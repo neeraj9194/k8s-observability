@@ -51,11 +51,6 @@ spec:
       restartPolicy: Always
 
       volumes:
-      # - name: prometheus-storage-volume
-      #   hostPath:
-      #     path: /var/local/prometheus
-      #     type: DirectoryOrCreate
-      
       - name: prometheus-config-volume
         configMap:
             defaultMode: 420
