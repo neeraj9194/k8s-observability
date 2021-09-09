@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-7xtnmfmgoldm5wp)^=1cmys2m%)gjp7il7g(vo-mfp2epk!5h2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', 'django-app-svc.default',  os.environ.get("MY_POD_IP")]
+ALLOWED_HOSTS = ['localhost', 'django-app-svc.default', os.environ.get("MY_POD_IP")]
 
 print(ALLOWED_HOSTS)
 
@@ -152,22 +152,43 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': 'debug.log',
+if os.environ.get("JSON_LOGS") == "yes":
+    LOGGING = {
+        "version": 1,
+        "disable_existing_loggers": False,
+        "formatters": {"json": {"()": "pythonjsonlogger.jsonlogger.JsonFormatter"}},
+        "handlers": {
+            'file': {
+                'level': 'DEBUG',
+                'class': 'logging.FileHandler',
+                'filename': '/var/log/django/debug.log',
+                "formatter": "json"
+            }
         },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['file'],
-            'level': 'DEBUG',
-            'propagate': True,
+        'loggers': {
+            'django': {
+                'handlers': ['file'],
+                'level': 'INFO',
+                'propagate': True,
+            },
         },
-    },
-}
+    }
+else:
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'file': {
+                'level': 'DEBUG',
+                'class': 'logging.FileHandler',
+                'filename': '/var/log/django/debug.log',
+            },
+        },
+        'loggers': {
+            'django': {
+                'handlers': ['file'],
+                'level': 'INFO',
+                'propagate': True,
+            },
+        },
+    }

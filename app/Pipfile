@@ -10,6 +10,7 @@ mysqlclient = "*"
 gunicorn = "*"
 flake8 = "*"
 django-prometheus = "*"
+python-json-logger = "*"
 
 [dev-packages]
 
