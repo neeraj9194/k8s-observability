@@ -42,8 +42,8 @@ spec:
   - type: prometheus
     metadata:
       serverAddress: http://prometheus:9090
-      metricName: http_requests_total
-      query: sum(rate(http_requests_total{deployment="my-deployment"}[2m]))
+      metricName: process_virtual_memory_bytes
+      query: rate(process_virtual_memory_bytes{deployment="my-deployment"}[20m])
       threshold: '100'  
 ```
 
