@@ -152,43 +152,43 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-if os.environ.get("JSON_LOGS") == "yes":
-    LOGGING = {
-        "version": 1,
-        "disable_existing_loggers": False,
-        "formatters": {"json": {"()": "pythonjsonlogger.jsonlogger.JsonFormatter"}},
-        "handlers": {
-            'file': {
-                'level': 'DEBUG',
-                'class': 'logging.FileHandler',
-                'filename': '/var/log/django/debug.log',
-                "formatter": "json"
-            }
-        },
-        'loggers': {
-            'django': {
-                'handlers': ['file'],
-                'level': 'INFO',
-                'propagate': True,
-            },
-        },
-    }
-else:
-    LOGGING = {
-        'version': 1,
-        'disable_existing_loggers': False,
-        'handlers': {
-            'file': {
-                'level': 'DEBUG',
-                'class': 'logging.FileHandler',
-                'filename': '/var/log/django/debug.log',
-            },
-        },
-        'loggers': {
-            'django': {
-                'handlers': ['file'],
-                'level': 'INFO',
-                'propagate': True,
-            },
-        },
-    }
+# if os.environ.get("JSON_LOGS") == "yes":
+#     LOGGING = {
+#         "version": 1,
+#         "disable_existing_loggers": False,
+#         "formatters": {"json": {"()": "pythonjsonlogger.jsonlogger.JsonFormatter"}},
+#         "handlers": {
+#             'file': {
+#                 'level': 'DEBUG',
+#                 'class': 'logging.FileHandler',
+#                 'filename': '/var/log/django/debug.log',
+#                 "formatter": "json"
+#             }
+#         },
+#         'loggers': {
+#             'django': {
+#                 'handlers': ['file'],
+#                 'level': 'INFO',
+#                 'propagate': True,
+#             },
+#         },
+#     }
+# else:
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'file': {
+#             'level': 'DEBUG',
+#             'class': 'logging.FileHandler',
+#             'filename': '/var/log/django/debug.log',
+#         },
+#     },
+#     'loggers': {
+#         'django': {
+#             'handlers': ['file'],
+#             'level': 'INFO',
+#             'propagate': True,
+#         },
+#     },
+# }

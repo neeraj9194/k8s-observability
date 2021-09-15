@@ -9,7 +9,7 @@ spec:
       restartPolicy: Never
       containers:
       - name: django-app
-        image: django-app:1.3
+        image: django-app:1.7
         imagePullPolicy: Never
         command: ['python3', 'manage.py', "migrate", "--noinput"]
         env:
@@ -26,5 +26,3 @@ spec:
           - name: DB_PORT
             value: "3306"
   backoffLimit: 4
-
-

@@ -1,0 +1,18 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: prometheus-scaledobject
+  namespace: keda
+  labels:
+    deploymentName: django-app
+spec:
+  maxReplicaCount: 12
+  scaleTargetRef:
+    name: django-app
+  triggers:
+    - type: prometheus
+      metadata:
+        serverAddress: http://prometheus:9090
+        metricName: process_virtual_memory_bytes
+        threshold: '100'
+        query: rate(process_virtual_memory_bytes{app='django-app'}[20m])
