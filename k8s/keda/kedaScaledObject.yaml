@@ -2,7 +2,6 @@ apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
   name: prometheus-scaledobject
-  namespace: keda
   labels:
     deploymentName: django-app
 spec:
@@ -12,7 +11,7 @@ spec:
   triggers:
     - type: prometheus
       metadata:
-        serverAddress: http://prometheus:9090
+        serverAddress: http://prometheus.monitoring:8080
         metricName: process_virtual_memory_bytes
         threshold: '100'
         query: rate(process_virtual_memory_bytes{app='django-app'}[20m])
