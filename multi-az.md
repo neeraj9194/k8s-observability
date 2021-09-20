@@ -1,3 +1,5 @@
+# Pod affinity
+
 https://www.verygoodsecurity.com/blog/posts/kubernetes-multi-az-deployments-using-pod-anti-affinity
 
 https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#an-example-of-a-pod-that-uses-pod-affinity
@@ -76,3 +78,39 @@ spec:
       - name: web-app
         image: nginx:1.16-alpine
 ```
+
+
+# Pod Topology Spread
+
+You can use topology spread constraints to control how Pods are spread across your cluster among failure-domains such as regions, zones, nodes, and other user-defined topology domains. This can help to achieve high availability as well as efficient resource utilization.
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+  labels:
+    foo: bar
+spec:
+  topologySpreadConstraints:
+  - maxSkew: 1 
+    topologyKey: topology.kubernetes.io/zone 
+    whenUnsatisfiable: DoNotSchedule 
+    labelSelector: 
+      matchLabels:
+        foo: bar 
+  containers:
+  - image: "docker.io/ocpqe/hello-pod"
+    name: hello-pod
+```
+
+
+- The maximum difference in number of pods between any two topology domains. The default is 1, and you cannot specify a value of 0.
+
+- The key of a node label. Nodes with this key and identical value are considered to be in the same topology.
+
+- How to handle a pod if it does not satisfy the spread constraint. The default is DoNotSchedule, which tells the scheduler not to schedule the pod. Set to ScheduleAnyway to still schedule the pod, but the scheduler prioritizes honoring the skew to not make the cluster more imbalanced.
+
+- Pods that match this label selector are counted and recognized as a group when spreading to satisfy the constraint. Be sure to specify a label selector, otherwise no pods can be matched.
+
+- Be sure that this Pod spec also sets its labels to match this label selector if you want it to be counted properly in the future.
